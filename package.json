@@ -1,0 +1,18 @@
+{
+	"name": "simple_page_builder",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "node index.js",
+		"single": "node single.js",
+		"multi": "node multiple.js"
+	},
+	"author": "Freddie Kaplan",
+	"license": "MIT",
+	"dependencies": {
+		"commander": "^10.0.0",
+		"fs.realpath": "^1.0.0"
+	}
+}
