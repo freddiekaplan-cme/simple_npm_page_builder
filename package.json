@@ -6,8 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "node index.js",
-		"single": "node single.js",
-		"multi": "node multiple.js"
+		"build": "node index.js"
 	},
 	"author": "Freddie Kaplan",
 	"license": "MIT",

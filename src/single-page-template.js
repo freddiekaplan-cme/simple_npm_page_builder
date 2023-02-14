@@ -12,7 +12,8 @@ const singlePageTemplate = `<!DOCTYPE html>
     	</header>
     	<main class="content">
 			<div>
-				Single page site
+			<p>-paragraph-one-to-replace-</p>
+			<p>-paragraph-two-to-replace-</p>
 			</div>
     	</main>
 		<footer class="footer">
