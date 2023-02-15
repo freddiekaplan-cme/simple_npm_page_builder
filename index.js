@@ -51,16 +51,16 @@ function createFolders() {
 		lowerCaseFolderName = folderName;
 	}
 	
-	fs.mkdir(`./public/${lowerCaseFolderName}`, { recursive: true }, (err) => {
+	fs.mkdir(`./site/${lowerCaseFolderName}`, { recursive: true }, (err) => {
 		if (err) throw err;
 	});
 
-	fs.mkdir(`./public/${lowerCaseFolderName}/styles`, { recursive: true }, (err) => {
+	fs.mkdir(`./site/${lowerCaseFolderName}/styles`, { recursive: true }, (err) => {
 		if (err) throw err;
 	});
 
 	if (pageType === "multi") {
-		fs.mkdir(`./public/${lowerCaseFolderName}/scripts`, { recursive: true }, (err) => {
+		fs.mkdir(`./site/${lowerCaseFolderName}/scripts`, { recursive: true }, (err) => {
 			if (err) throw err;
 		});
 	}
@@ -131,7 +131,7 @@ function setStyle() {
 setStyle();
 
 function createPage() {
-	const message = `You built a ${singleOrMultiMessage} page website called '${titleArgument}' with the ${colorScheme} color scheme.\nFilepath: public/${lowerCaseFolderName}`;
+	const message = `You built a ${singleOrMultiMessage} page website called '${titleArgument}' with the ${colorScheme} color scheme.\nFilepath: site/${lowerCaseFolderName}`;
 	
 	fs.writeFile("./site/index.html", htmlContentIndex);
 	fs.writeFile("./site/styles/style.css", styleContent);
