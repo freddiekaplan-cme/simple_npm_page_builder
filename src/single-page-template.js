@@ -9,15 +9,17 @@ const singlePageTemplate = `<!DOCTYPE html>
 	</head>
 	
 	<body>
-		<header class="header">
+		-header-to-replace-
 			<h1>-title-to-replace-</h1>
     	</header>
+		-menu-to-replace-
     	<main class="content">
 			<div>
 			<p>-paragraph-one-to-replace-</p>
 			<p>-paragraph-two-to-replace-</p>
 			</div>
     	</main>
+		
 		<footer class="footer">
 		&copy; -year-to-replace-
   		</footer>

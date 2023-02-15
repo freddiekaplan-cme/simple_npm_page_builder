@@ -2,13 +2,16 @@ import { Command } from "commander";
 import fs from 'fs/promises';
 import dateAndTime from "./date-and-time.js";
 import singlePageTemplate from "./src/single-page-template.js";
-import multiPageTemplate from "./src/multi-page-template.js";
+//import multiPageTemplate from "./src/multi-page-template.js";
 import multiPageAboutTemplate from "./src/multi-page-about-template.js";
 import multiPageContactTemplate from "./src/multi-page-contact-template.js";
+import { headerTemplate, menuHeaderTemplate, menuIndex, menuAbout, menuContact } from "./src/menu-template.js";
 import styleTemplateSingle from "./src/style-template-single.js";
 import styleTemplateMulti from "./src/style-template-multi.js";
+//import scriptTemplate from "./src/script-template.js";
 import colorArray from "./src/style-color-array.js";
 import lorem from "./src/lorem.js";
+//import { format } from "path";
 
 const argumentParser = new Command();
 argumentParser.option("-b, --build", "Build a site from the template.");
@@ -19,9 +22,11 @@ let titleArgument = argumentParser.args[1];
 let colorArgument = argumentParser.args[2];
 let pageType = "";
 let lowerCaseFolderName = "";
-let htmlContentIndex = "";
+let htmlContentIndex = singlePageTemplate;
+let htmlContentAbout = singlePageTemplate;
+let htmlContentContact = singlePageTemplate;
 let styleContent = styleTemplateSingle;
-let colorScheme = "random";
+let colorScheme = "";
 let pickedColor = "";
 let singleOrMultiMessage = "";
 
@@ -51,16 +56,16 @@ function createFolders() {
 		lowerCaseFolderName = folderName;
 	}
 	
-	fs.mkdir(`./site/${lowerCaseFolderName}`, { recursive: true }, (err) => {
+	fs.mkdir(`./sites/${lowerCaseFolderName}`, { recursive: true }, (err) => {
 		if (err) throw err;
 	});
 
-	fs.mkdir(`./site/${lowerCaseFolderName}/styles`, { recursive: true }, (err) => {
+	fs.mkdir(`./sites/${lowerCaseFolderName}/styles`, { recursive: true }, (err) => {
 		if (err) throw err;
 	});
 
 	if (pageType === "multi") {
-		fs.mkdir(`./site/${lowerCaseFolderName}/scripts`, { recursive: true }, (err) => {
+		fs.mkdir(`./sites/${lowerCaseFolderName}/scripts`, { recursive: true }, (err) => {
 			if (err) throw err;
 		});
 	}
@@ -68,25 +73,46 @@ function createFolders() {
 createFolders();
 
 function setContent() {
+	const currentDate = new Date();
+	const currentYear = currentDate.getFullYear();
+	const indexLorem = Math.floor(Math.random() * lorem.length);
+
+	if (titleArgument === undefined) {
+		titleArgument = "Page Title";
+	};
+
+	htmlContentIndex = htmlContentIndex.replace(/-title-to-replace-/g, titleArgument);
+	htmlContentIndex = htmlContentIndex.replace(/-paragraph-one-to-replace-/, lorem[indexLorem][0]);
+	htmlContentIndex = htmlContentIndex.replace(/-paragraph-two-to-replace-/, lorem[indexLorem][1]);
+	htmlContentIndex = htmlContentIndex.replace(/-year-to-replace-/, currentYear);
+
 	if (pageType === "single") {
+		htmlContentIndex = htmlContentIndex.replace(/-header-to-replace-/, headerTemplate);
+		htmlContentIndex = htmlContentIndex.replace(/-menu-to-replace-/, "");
 		styleContent = styleTemplateSingle;
-		htmlContentIndex = singlePageTemplate;
 		singleOrMultiMessage = "single"
 	}
 	else if (pageType === "multi") {
-		const multiPageAbout = multiPageAboutTemplate;
-		const multiPageContact = multiPageContactTemplate
 		const aboutLorem = Math.floor(Math.random() * lorem.length);
 		const contactLorem = Math.floor(Math.random() * lorem.length);
 		
 		styleContent = styleTemplateMulti;
-		htmlContentIndex = multiPageTemplate;
 		singleOrMultiMessage = "three";
 
-		multiPageAbout = multiPageAbout.replace(/-paragraph-one-to-replace-/, lorem[aboutLorem][0]);
-		multiPageAbout = multiPageAbout.replace(/-paragraph-two-to-replace-/, lorem[aboutLorem][1]);
-		multiPageContact = multiPageContact.replace(/-paragraph-one-to-replace-/, lorem[contactLorem][0]);
-		multiPageContact = multiPageContact.replace(/-paragraph-two-to-replace-/, lorem[contactLorem][1]);
+		htmlContentIndex = htmlContentIndex.replace(/-header-to-replace-/, menuHeaderTemplate);
+		htmlContentIndex = htmlContentIndex.replace(/-menu-to-replace-/, menuIndex);
+		htmlContentAbout = htmlContentAbout.replace(/-title-to-replace-/g, "About");
+		htmlContentAbout = htmlContentAbout.replace(/-header-to-replace-/, menuHeaderTemplate);
+		htmlContentAbout = htmlContentAbout.replace(/-menu-to-replace-/, menuAbout);
+		htmlContentAbout = htmlContentAbout.replace(/-paragraph-one-to-replace-/, lorem[aboutLorem][0]);
+		htmlContentAbout = htmlContentAbout.replace(/-paragraph-two-to-replace-/, lorem[aboutLorem][1]);
+		htmlContentAbout = htmlContentAbout.replace(/-year-to-replace-/, currentYear);
+		htmlContentContact = htmlContentContact.replace(/-title-to-replace-/g, "Contact");
+		htmlContentContact = htmlContentContact.replace(/-menu-to-replace-/, menuContact);
+		htmlContentContact = htmlContentContact.replace(/-header-to-replace-/, menuHeaderTemplate);
+		htmlContentContact = htmlContentContact.replace(/-paragraph-one-to-replace-/, lorem[contactLorem][0]);
+		htmlContentContact = htmlContentContact.replace(/-paragraph-two-to-replace-/, lorem[contactLorem][1]);
+		htmlContentContact = htmlContentContact.replace(/-year-to-replace-/, currentYear);
 	};
 };
 setContent();
@@ -105,22 +131,9 @@ function colorPicker() {
 colorPicker();
 
 function setStyle() {
-	const currentDate = new Date();
-	const currentYear = currentDate.getFullYear();
-	const randomLorem = Math.floor(Math.random() * lorem.length);
-
 	styleContent = styleContent.replace(/-primary-to-replace-/, colorArray[pickedColor][1]);
 	styleContent = styleContent.replace(/-secondary-to-replace-/, colorArray[pickedColor][2]);
 	styleContent = styleContent.replace(/-accent-to-replace-/, colorArray[pickedColor][3]);
-	
-	if (titleArgument === undefined) {
-		titleArgument = "Page Title";
-	};
-
-	htmlContentIndex = htmlContentIndex.replace(/-title-to-replace-/g, titleArgument);
-	htmlContentIndex = htmlContentIndex.replace(/-paragraph-one-to-replace-/, lorem[randomLorem][0]);
-	htmlContentIndex = htmlContentIndex.replace(/-paragraph-two-to-replace-/, lorem[randomLorem][1]);
-	htmlContentIndex = htmlContentIndex.replace(/-year-to-replace-/, currentYear);
 
 	if (pickedColor === 6 || pickedColor === 9 || pickedColor === 12 || pickedColor === 13 || pickedColor === 15 || pickedColor === 18) {
 		styleContent = styleContent.replace(/-header-footer-color-to-replace-/, "#000");
@@ -131,14 +144,15 @@ function setStyle() {
 setStyle();
 
 function createPage() {
-	const message = `You built a ${singleOrMultiMessage} page website called '${titleArgument}' with the ${colorScheme} color scheme.\nFilepath: site/${lowerCaseFolderName}`;
+	const message = `You built a ${singleOrMultiMessage} page website called '${titleArgument}' with the ${colorScheme} color scheme.\nFilepath: sites/${lowerCaseFolderName}`;
 	
-	fs.writeFile("./site/index.html", htmlContentIndex);
-	fs.writeFile("./site/styles/style.css", styleContent);
+	fs.writeFile(`./sites/${lowerCaseFolderName}/index.html`, htmlContentIndex);
+	fs.writeFile(`./sites/${lowerCaseFolderName}/styles/style.css`, styleContent);
 
 	if (pageType === "multi") {
-		fs.writeFile("./site/about.html", multiPageAbout);
-		fs.writeFile("./site/contact.html", multiPageContact);
+		fs.writeFile(`./sites/${lowerCaseFolderName}/about.html`, htmlContentAbout);
+		fs.writeFile(`./sites/${lowerCaseFolderName}/contact.html`, htmlContentContact);
+		//fs.writeFile(`./sites/${lowerCaseFolderName}/scripts/script.js`, scriptTemplate);
 	};
 
 	console.log(message);

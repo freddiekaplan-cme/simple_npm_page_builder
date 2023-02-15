@@ -1,3 +1,7 @@
+replace
+header
+style för menu
+
 meny
 se till att aktuell sida har annan färg
 
