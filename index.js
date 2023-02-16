@@ -1,17 +1,14 @@
 import { Command } from "commander";
 import fs from 'fs/promises';
 import dateAndTime from "./date-and-time.js";
-import singlePageTemplate from "./src/single-page-template.js";
-//import multiPageTemplate from "./src/multi-page-template.js";
-import multiPageAboutTemplate from "./src/multi-page-about-template.js";
-import multiPageContactTemplate from "./src/multi-page-contact-template.js";
+import pageTemplate from "./src/page-template.js";
 import { headerTemplate, menuHeaderTemplate, menuIndex, menuAbout, menuContact } from "./src/menu-template.js";
 import styleTemplateSingle from "./src/style-template-single.js";
 import styleTemplateMulti from "./src/style-template-multi.js";
-//import scriptTemplate from "./src/script-template.js";
+import menuHamburger from "./src/menu-hamburger.js";
+import scriptTemplate from "./src/script-template.js";
 import colorArray from "./src/style-color-array.js";
 import lorem from "./src/lorem.js";
-//import { format } from "path";
 
 const argumentParser = new Command();
 argumentParser.option("-b, --build", "Build a site from the template.");
@@ -22,16 +19,17 @@ let titleArgument = argumentParser.args[1];
 let colorArgument = argumentParser.args[2];
 let pageType = "";
 let lowerCaseFolderName = "";
-let htmlContentIndex = singlePageTemplate;
-let htmlContentAbout = singlePageTemplate;
-let htmlContentContact = singlePageTemplate;
+let htmlContentIndex = pageTemplate;
+let htmlContentAbout = pageTemplate;
+let htmlContentContact = pageTemplate;
 let styleContent = styleTemplateSingle;
+let menuIcon = "";
 let colorScheme = "";
 let pickedColor = "";
 let singleOrMultiMessage = "";
 
 function setPageType() {
-	if (pageArgument === "multi" || pageArgument === "-m" || pageArgument === "m") {
+	if (pageArgument === "multi" || pageArgument === "multiple" || pageArgument === "-m" || pageArgument === "m") {
 		pageType = "multi";
 	}
 	else if (pageArgument === "single" || pageArgument === "-s" || pageArgument === "s" || pageArgument === undefined) {
@@ -68,6 +66,9 @@ function createFolders() {
 		fs.mkdir(`./sites/${lowerCaseFolderName}/scripts`, { recursive: true }, (err) => {
 			if (err) throw err;
 		});
+		fs.mkdir(`./sites/${lowerCaseFolderName}/img`, { recursive: true }, (err) => {
+			if (err) throw err;
+		});
 	}
 }
 createFolders();
@@ -85,7 +86,7 @@ function setContent() {
 	htmlContentIndex = htmlContentIndex.replace(/-paragraph-one-to-replace-/, lorem[indexLorem][0]);
 	htmlContentIndex = htmlContentIndex.replace(/-paragraph-two-to-replace-/, lorem[indexLorem][1]);
 	htmlContentIndex = htmlContentIndex.replace(/-year-to-replace-/, currentYear);
-
+	
 	if (pageType === "single") {
 		htmlContentIndex = htmlContentIndex.replace(/-header-to-replace-/, headerTemplate);
 		htmlContentIndex = htmlContentIndex.replace(/-menu-to-replace-/, "");
@@ -101,12 +102,14 @@ function setContent() {
 
 		htmlContentIndex = htmlContentIndex.replace(/-header-to-replace-/, menuHeaderTemplate);
 		htmlContentIndex = htmlContentIndex.replace(/-menu-to-replace-/, menuIndex);
+
 		htmlContentAbout = htmlContentAbout.replace(/-title-to-replace-/g, "About");
 		htmlContentAbout = htmlContentAbout.replace(/-header-to-replace-/, menuHeaderTemplate);
 		htmlContentAbout = htmlContentAbout.replace(/-menu-to-replace-/, menuAbout);
 		htmlContentAbout = htmlContentAbout.replace(/-paragraph-one-to-replace-/, lorem[aboutLorem][0]);
 		htmlContentAbout = htmlContentAbout.replace(/-paragraph-two-to-replace-/, lorem[aboutLorem][1]);
 		htmlContentAbout = htmlContentAbout.replace(/-year-to-replace-/, currentYear);
+
 		htmlContentContact = htmlContentContact.replace(/-title-to-replace-/g, "Contact");
 		htmlContentContact = htmlContentContact.replace(/-menu-to-replace-/, menuContact);
 		htmlContentContact = htmlContentContact.replace(/-header-to-replace-/, menuHeaderTemplate);
@@ -136,9 +139,11 @@ function setStyle() {
 	styleContent = styleContent.replace(/-accent-to-replace-/, colorArray[pickedColor][3]);
 
 	if (pickedColor === 6 || pickedColor === 9 || pickedColor === 12 || pickedColor === 13 || pickedColor === 15 || pickedColor === 18) {
-		styleContent = styleContent.replace(/-header-footer-color-to-replace-/, "#000");
+		styleContent = styleContent.replace(/-alternative-color-to-replace-/g, "var(--black-color)");
+		menuIcon = menuHamburger.replace(/-menu-icon-color-to-replace-/, "000");
 	} else {
-		styleContent = styleContent.replace(/-header-footer-color-to-replace-/, "var(--primary-color)");
+		styleContent = styleContent.replace(/-alternative-color-to-replace-/g, "var(--primary-color)");
+		menuIcon = menuHamburger.replace(/-menu-icon-color-to-replace-/, colorArray[pickedColor][1]);
 	}
 }
 setStyle();
@@ -152,7 +157,8 @@ function createPage() {
 	if (pageType === "multi") {
 		fs.writeFile(`./sites/${lowerCaseFolderName}/about.html`, htmlContentAbout);
 		fs.writeFile(`./sites/${lowerCaseFolderName}/contact.html`, htmlContentContact);
-		//fs.writeFile(`./sites/${lowerCaseFolderName}/scripts/script.js`, scriptTemplate);
+		fs.writeFile(`./sites/${lowerCaseFolderName}/scripts/script.js`, scriptTemplate);
+		fs.writeFile(`./sites/${lowerCaseFolderName}/img/menu-hamburger.svg`, menuIcon);
 	};
 
 	console.log(message);

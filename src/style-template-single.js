@@ -2,11 +2,13 @@ let styleTemplateSingle = `:root {
 	--primary-color: #-primary-to-replace-;
 	--secondary-color: #-secondary-to-replace-;
 	--accent-color: #-accent-to-replace-;
+	--black-color: #000;
 }
 
 html {
 	font-size: 14px; 
 	height: 100vh;
+	scroll-behavior: smooth;
   }
   
 body {	
@@ -25,7 +27,7 @@ body {
 .header,
 .footer {
 	align-items: center;
-	color: -header-footer-color-to-replace-;
+	color: -alternative-color-to-replace-;
 	display: flex;
 	flex-direction: column;
 	height: 20vh;
@@ -41,7 +43,7 @@ body {
 	margin: 0 auto;
 	max-width: 600px;
 	min-height: 60vh;
-	padding: 56px 12px;
+	padding: 56px 16px;
 	}
 
 .content-item {
