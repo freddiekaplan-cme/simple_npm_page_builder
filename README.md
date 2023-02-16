@@ -1,4 +1,5 @@
-Simple Page Builder
+SIMPLE PAGE BUILDER
+-------------------
 
 WHERE TO START
 
@@ -61,3 +62,5 @@ Make sure to specify each argument going up to the one you are interested in, yo
 	"paper"
 
 	Ex. npm run start multi "Office Supplies For You" paper
+
+Made by Freddie Kaplan in 2023.
