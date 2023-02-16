@@ -1,12 +1,15 @@
 Simple Page Builder
 
 WHERE TO START
-Build a simple site with a few commands in the terminal, starting with "npm run start" or "npm run build". Sites are built in the "sites" folder.
+
+Build a simple site with a few commands in the terminal, starting with "npm run start" or "npm run build". Sites are built in the "sites" folder. You need node to use npm.
 
 COMMAND OPTIONS ARE ... OPTIONAL
+
 There is only one command option: "--build" or "-b". It's not mandatory to use, the script will still run the build command without it.
 
 ARGUMENTS
+
 Here's where the fun starts, you can put in your own arguments in a specific order to create your simple website:
 
 "Type" "Name" "Color"
